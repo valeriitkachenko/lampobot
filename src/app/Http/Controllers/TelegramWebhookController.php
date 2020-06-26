@@ -22,5 +22,7 @@ class TelegramWebhookController extends Controller
     public function index()
     {
         $this->service->handleWebhook();
+
+        return 'ok';
     }
 }
