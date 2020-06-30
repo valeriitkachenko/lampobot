@@ -127,8 +127,6 @@ class TelegramWebhookService
     {
         if (array_key_exists($name, $this->commands)) {
             return $this->commands[$name]->make(telegram(), $arguments, $message);
-        } elseif (array_key_exists('help', $this->commands)) {
-            return $this->commands['help']->make(telegram(), $arguments, $message);
         }
 
         return true;
