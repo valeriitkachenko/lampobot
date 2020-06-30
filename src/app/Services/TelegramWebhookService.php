@@ -39,24 +39,14 @@ class TelegramWebhookService
      */
     private function handle($message, Update $update)
     {
-        $this->throwErrorIfMessageIsEmpty($message);
+        if (empty($message)) {
+            return;
+        }
 
         $commandAndArguments = $this->getCommandAndArguments($message->getText());
 
         if (!empty($commandAndArguments)) {
             $this->execute($commandAndArguments['command'], $commandAndArguments['arguments'], $update);
-        }
-
-        return $update;
-    }
-
-    /**
-     * @param string $message
-     */
-    private function throwErrorIfMessageIsEmpty($message)
-    {
-        if (trim($message) === '') {
-            throw new \InvalidArgumentException('Message is empty, Cannot parse for command');
         }
     }
 
