@@ -59,5 +59,7 @@ return [
         Telegram\Bot\Commands\HelpCommand::class,
         App\Commands\QuestionCommand::class,
         App\Commands\WeatherCommand::class,
+        App\Commands\CatpicCommand::class,
+        App\Commands\CatgifCommand::class,
     ],
 ];
