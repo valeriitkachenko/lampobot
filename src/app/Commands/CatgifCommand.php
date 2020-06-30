@@ -35,7 +35,7 @@ class CatgifCommand extends Command
      */
     public function handle($arguments)
     {
-        $catImageUrl = $this->catService->getCatGifUrl();
+        $catImageUrl = $this->catService->getGifUrl();
 
         if (empty($catImageUrl)) {
             return;

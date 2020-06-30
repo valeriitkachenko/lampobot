@@ -35,7 +35,7 @@ class CatpicCommand extends Command
      */
     public function handle($arguments)
     {
-        $catImageUrl = $this->catService->getCatPicUrl();
+        $catImageUrl = $this->catService->getPicUrl();
 
         if (empty($catImageUrl)) {
             return;
