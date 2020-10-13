@@ -63,5 +63,6 @@ return [
         App\Commands\CatgifCommand::class,
         App\Commands\DogpicCommand::class,
         App\Commands\DoggifCommand::class,
+        App\Commands\AirQualityCommand::class,
     ],
 ];
