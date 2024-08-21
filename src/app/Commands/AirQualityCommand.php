@@ -12,40 +12,21 @@ class AirQualityCommand extends Command implements RegexCommand
 {
     use Regexable;
 
-    /**
-     * @var string Command Name
-     */
-    protected $name = "air-quality";
+    protected string $name = "air-quality";
 
-    /**
-     * @var string Command Description
-     */
-    protected $description = "Air quality index";
+    protected string $description = "Air quality index";
 
-    /**
-     * @var string Regular expression pattern
-     */
-    protected $regexPattern = '/качество воздуха\s(.+)/ui';
+    protected string $regexPattern = '/качество воздуха\s(.+)/ui';
 
-    /**
-     * @var AirQualityService
-     */
-    private $service;
-
-    /**
-     * AirQualityCommand constructor.
-     */
-    public function __construct()
+    public function __construct(
+        private readonly AirQualityService $service
+    )
     {
-        $this->service = app()->make(AirQualityService::class);
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function handle($arguments)
+    public function handle()
     {
-        $city = $this->getCityFromArguments($arguments);
+        $city = $this->getCityFromArguments($this->getArguments());
 
         if ($this->cityIsNotSupported($city)) {
             return $this->sendToBeImplementedMessage();

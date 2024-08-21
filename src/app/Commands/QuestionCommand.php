@@ -11,25 +11,13 @@ class QuestionCommand extends Command implements RegexCommand
 {
     use Regexable;
 
-    /**
-     * @var string Command Name
-     */
-    protected $name = "question";
+    protected string $name = "question";
 
-    /**
-     * @var string Command Description
-     */
-    protected $description = "Question";
+    protected string $description = "Question";
 
-    /**
-     * @var string Regular expression pattern
-     */
-    protected $regexPattern = '/Бот,\s(.+)\?/ui';
+    protected string $regexPattern = '/Бот,\s(.+)\?/ui';
 
-    /**
-     * @inheritdoc
-     */
-    public function handle($arguments)
+    public function handle()
     {
         $this->replyWithChatAction(['action' => Actions::TYPING]);
         sleep(1);

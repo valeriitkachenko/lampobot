@@ -12,40 +12,20 @@ class WeatherCommand extends Command implements RegexCommand
 {
     use Regexable;
 
-    /**
-     * @var string Command Name
-     */
-    protected $name = "weather";
+    protected string $name = "weather";
 
-    /**
-     * @var string Command Description
-     */
-    protected $description = "Weather forecast";
+    protected string $description = "Weather forecast";
 
-    /**
-     * @var string Regular expression pattern
-     */
-    protected $regexPattern = '/погода\s(.+)/ui';
+    protected string $regexPattern = '/погода\s(.+)/ui';
 
-    /**
-     * @var WeatherService
-     */
-    private $weatherService;
-
-    /**
-     * WeatherCommand constructor.
-     */
-    public function __construct()
-    {
-        $this->weatherService = app()->make(WeatherService::class);
+    public function __construct(
+        private readonly WeatherService $weatherService
+    ) {
     }
 
-    /**
-     * @inheritdoc
-     */
-    public function handle($arguments)
+    public function handle()
     {
-        $city = $arguments[1];
+        $city = $this->getArguments()[1];
 
         $this->replyWithChatAction(['action' => Actions::TYPING]);
         sleep(1);

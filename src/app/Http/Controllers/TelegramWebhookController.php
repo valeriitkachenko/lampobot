@@ -6,20 +6,11 @@ use App\Services\TelegramWebhookService;
 
 class TelegramWebhookController extends Controller
 {
-    /**
-     * @var TelegramWebhookService
-     */
-    protected $service;
-
-    /**
-     * @param TelegramWebhookService $service
-     */
-    public function __construct(TelegramWebhookService $service)
+    public function __construct(private readonly TelegramWebhookService $service)
     {
-        $this->service = $service;
     }
 
-    public function index()
+    public function index(): string
     {
         $this->service->handleWebhook();
 

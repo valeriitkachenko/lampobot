@@ -10,99 +10,65 @@ use Telegram\Bot\Objects\Update;
 
 class TelegramWebhookService
 {
-    const REGEX_FOR_STANDARD_COMMAND = '/^\/([^\s@]+)@?(\S+)?\s?(.*)$/';
+    public const REGEX_FOR_STANDARD_COMMAND = '/^\/([^\s@]+)@?(\S+)?\s?(.*)$/';
 
     /**
      * @var Command[]
      */
-    private $commands = [];
+    private array $commands;
 
     public function __construct()
     {
         $this->commands = Telegram::getCommands();
     }
 
-    public function handleWebhook()
+    public function handleWebhook(): void
     {
-        $update = Telegram::getWebhookUpdates();
+        $update = Telegram::getWebhookUpdate();
         $message = $update->getMessage();
 
         $this->handle($message, $update);
     }
 
-    /**
-     * Handles Inbound Messages and Executes Appropriate Command.
-     *
-     * @param $message
-     * @param $update
-     * @return Update
-     */
-    private function handle($message, Update $update)
+    private function handle(Collection $message, Update $update): void
     {
-        if (empty($message)) {
+        if ($message->isEmpty()) {
             return;
         }
 
-        $commandAndArguments = $this->getCommandAndArguments($message->getText());
+        $commandName = $this->getCommandName($message->getText());
 
-        if (!empty($commandAndArguments)) {
-            $this->execute($commandAndArguments['command'], $commandAndArguments['arguments'], $update);
+        if ($commandName) {
+            $this->execute($commandName, $update);
         }
     }
 
-    /**
-     * @param string $message
-     * @return array
-     */
-    private function getCommandAndArguments($message)
+    private function getCommandName(string $messageText): ?string
     {
-        $matches = $this->commandIsStandardOne($message);
-
-        if (empty($matches)) {
-            $matches = $this->commandIsRegexOne($message);
-        }
-
-        return $matches;
+        return $this->getStandardCommand($messageText) ?? $this->getRegexCommand($messageText);
     }
 
-    /**
-     * @param $message
-     * @return array|false
-     */
-    private function commandIsStandardOne($message)
+    private function getStandardCommand(string $message): ?string
     {
         if (preg_match(self::REGEX_FOR_STANDARD_COMMAND, $message, $matches)) {
-            return [
-                'command' => $matches[1],
-                'arguments' => $matches[3],
-            ];
+            return $matches[1];
         }
 
-        return false;
+        return null;
     }
 
-    /**
-     * @param string $message
-     * @return array|false
-     */
-    private function commandIsRegexOne($message)
+    private function getRegexCommand(string $message): ?string
     {
         foreach ($this->getRegexCommands() as $name => $command) {
-            if (preg_match($command->getRegexPattern(), $message, $matches)) {
-                return [
-                    'command' => $name,
-                    'arguments' => $matches,
-                ];
+            if (preg_match($command->getRegexPattern(), $message)) {
+                return $name;
             }
         }
 
-        return false;
+        return null;
     }
 
-    /**
-     * @return Collection
-     */
-    private function getRegexCommands()
+    private function getRegexCommands(): Collection
     {
         $regexCommands = collect();
 
@@ -115,20 +81,12 @@ class TelegramWebhookService
         return $regexCommands;
     }
 
-    /**
-     * Execute the command.
-     *
-     * @param $name
-     * @param $arguments
-     * @param $message
-     * @return mixed
-     */
-    public function execute($name, $arguments, $message)
+    public function execute(string $name, Update $update): mixed
     {
-        if (array_key_exists($name, $this->commands)) {
-            return $this->commands[$name]->make(telegram(), $arguments, $message);
+        if (!array_key_exists($name, $this->commands)) {
+            return null;
         }
 
-        return true;
+        return $this->commands[$name]->make(app('telegram.bot'), $update, []);
     }
 }
