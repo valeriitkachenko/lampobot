@@ -2,7 +2,7 @@
 
 namespace App\Services;
 
-use App\Commands\Interfaces\RegexCommand;
+use App\Commands\RegexCommand;
 use Illuminate\Support\Collection;
 use Telegram\Bot\Commands\Command;
 use Telegram\Bot\Laravel\Facades\Telegram;
@@ -32,7 +32,7 @@ class TelegramWebhookService
 
     private function handle(Collection $message, Update $update): void
     {
-        if ($message->isEmpty()) {
+        if ($message->isEmpty() || empty($message->getText())) {
             return;
         }
 
@@ -60,7 +60,7 @@ class TelegramWebhookService
     private function getRegexCommand(string $message): ?string
     {
         foreach ($this->getRegexCommands() as $name => $command) {
-            if (preg_match($command->getRegexPattern(), $message)) {
+            if (preg_match($command->getPattern(), $message)) {
                 return $name;
             }
         }
@@ -68,6 +68,9 @@ class TelegramWebhookService
         return null;
     }
 
+    /**
+     * @return Collection|RegexCommand[]
+     */
     private function getRegexCommands(): Collection
     {
         $regexCommands = collect();

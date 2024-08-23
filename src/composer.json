@@ -9,12 +9,13 @@
     "license": "MIT",
     "require": {
         "php": "^8.3",
-        "cmfcmf/openweathermap-php-api": "^3.2",
         "irazasyed/telegram-bot-sdk": "^3.14",
         "laravel/framework": "^11.0",
         "laravel/helpers": "^1.2",
         "laravel/sanctum": "^4.0",
-        "laravel/tinker": "^2.0"
+        "laravel/tinker": "^2.0",
+        "solgenpower/laravel-openweather": "^0.2.0",
+        "spatie/emoji": "^4.1"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",

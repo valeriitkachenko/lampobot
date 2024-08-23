@@ -2,37 +2,34 @@
 
 namespace App\Commands;
 
-use App\Commands\Interfaces\RegexCommand;
-use App\Traits\Commands\Regexable;
+use Exception;
 use Telegram\Bot\Actions;
-use Telegram\Bot\Commands\Command;
 
-class QuestionCommand extends Command implements RegexCommand
+class QuestionCommand extends RegexCommand
 {
-    use Regexable;
-
     protected string $name = "question";
-
     protected string $description = "Question";
+    protected string $pattern = '/Bot,\s(.+)\?/ui';
 
-    protected string $regexPattern = '/Бот,\s(.+)\?/ui';
-
-    public function handle()
+    /**
+     * @throws Exception
+     */
+    public function handle(): void
     {
         $this->replyWithChatAction(['action' => Actions::TYPING]);
         sleep(1);
 
         $this->replyWithMessage([
-            'text' => $this->getRandomAnswerYesOrNo(),
+            'text' => $this->receiveRandomAnswerFromTheUniverse(),
             'reply_to_message_id' => $this->update->getMessage()->getMessageId()
         ]);
     }
 
     /**
-     * @return string
+     * @throws Exception
      */
-    private function getRandomAnswerYesOrNo()
+    private function receiveRandomAnswerFromTheUniverse(): string
     {
-        return rand(0,1) == 0 ? 'Да' : 'Нет';
+        return random_int(0,1) ? 'Yes' : 'No';
     }
 }

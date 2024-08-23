@@ -1,11 +1,10 @@
 <?php
 
-if (!function_exists('telegram')) {
-    /**
-     * @return \Telegram\Bot\Api
-     */
-    function telegram()
+if (!function_exists('seconds_to_hours')) {
+    function seconds_to_hours(int $seconds): int
     {
-        return app('telegram');
+        $secondsInOneHour = 3600;
+
+        return $seconds / $secondsInOneHour;
     }
 }

@@ -2,21 +2,17 @@
 
 namespace App\Commands;
 
-use App\Commands\Interfaces\RegexCommand;
 use App\Services\AirQualityService;
-use App\Traits\Commands\Regexable;
 use Telegram\Bot\Actions;
-use Telegram\Bot\Commands\Command;
 
-class AirQualityCommand extends Command implements RegexCommand
+class AirQualityCommand extends RegexCommand
 {
-    use Regexable;
 
     protected string $name = "air-quality";
 
     protected string $description = "Air quality index";
 
-    protected string $regexPattern = '/качество воздуха\s(.+)/ui';
+    protected string $pattern = '/качество воздуха\s(.+)/ui';
 
     public function __construct(
         private readonly AirQualityService $service
